@@ -67,17 +67,20 @@ client.on("message", message => {
 			message.channel.send(res, spongebob);
 		}
 	}
-	if (command == "aesthetic"){
+	if (command == "ae"){
 		if (args.length == 0){
 			message.channel.send("Include a message, faggot.")
 			.then(sentMessage => sentMessage.delete(3000));
 		}
+		else{
+			var str = args.join(' ');
+			var res = '';
+			for (var i = 0; i < str.length; i++){
+				res += str.charAt(i) + " ";
+			}
+			message.channel.send(res);
+		}
 	}
-	
-	/*TODO: !aesthetic: place space between every character in given string
-			!cleanup: delete all bot boy messages
-			when user enters voice channel say hello
-			fuck with webhooks*/
 	});
 	
 client.on('voiceStateUpdate', (oldMember, newMember) => {
