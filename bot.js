@@ -1,14 +1,27 @@
 const Discord = require("discord.js");
-const client = new Discord.Client();
+const fs = require("fs");
 const config = require("./config.json");
+
+const client = new Discord.Client();
 const spongebob = new Discord.Attachment("./assets/spongebob.jpg");
+var memes = "";
+
 
 client.on("ready", () => {
 	console.log("Logged in as " + client.user.username + "!");
+	fs.readFile("./assets/memes.txt", "utf-8", (err, data) => {
+		if (err) throw err;
+		memes = data.split("\n");
+		for(let i = 0; i < memes.length; i++){
+			if (memes[i].endsWith("\r")){
+				memes[i] = memes[i].slice(0, -1);
+			}
+		}
+	});
 });
 
 client.on("message", message => {
-
+	
 	if(message.author.bot) return;
   
 	if(message.content.indexOf(config.prefix) !== 0) return;
@@ -20,8 +33,12 @@ client.on("message", message => {
 		message.delete();
 		client.destroy();
 	}
+	if (command == "meme"){
+		let random = Math.floor(Math.random() * memes.length);
+		message.channel.send(memes[random]);
+	}
 	if (command == "sk8r"){
-		message.channel.send("https://www.youtube.com/watch?v=jiTfrqkq7nY");
+		message.channel.send("https://www.youtube.com/watch?v=jiTfrqkq7nY"); 
 	}
 	if (command == "ping"){
 		message.channel.send("suh dude");
