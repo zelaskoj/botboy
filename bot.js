@@ -13,10 +13,6 @@ client.on("message", message => {
   
 	if(message.content.indexOf(config.prefix) !== 0) return;
 
-	// Here we separate our "command" name, and our "arguments" for the command. 
-	// e.g. if we have the message "+say Is this the real life?" , we'll get the following:
-	// command = say
-	// args = ["Is", "this", "the", "real", "life?"]
 	const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
 
@@ -24,39 +20,28 @@ client.on("message", message => {
 		message.delete();
 		client.destroy();
 	}
+	if (command == "sk8r"){
+		message.channel.send("https://www.youtube.com/watch?v=jiTfrqkq7nY");
+	}
 	if (command == "ping"){
 		message.channel.send("suh dude");
 	}
-	/*if (command == "cleanup"){
-		if (args.length == 0){
-			message.channel.send("Gotta specify how many messages to clean up!")
-			.then(sentMessage => sentMessage.delete(3000));
-		}
-		else if (parseInt(args[0]) == "NaN"){
-			message.channel.send("Gotta make sure you specify a number and not anything else!")
-			.then(sentMessage => sentMessage.delete(3000));
-		}
-		else{
-			var count = parseInt(args[0]);
-			var messageList = message.channel.messages({before: message.id, limit: 1000})
-			while(count != 0){
-				var msg = messagesList.last();
-				if (msg.author.id == client.user.id){
-					msg.delete();
-					count--;
-				}
-			}
-		}
-	}*/
+	if (command == "help"){
+		message.author.send(config.help);
+	}
+	if(command === "purge") {
+		const messagecount = parseInt(args[0], 10);
+		message.channel.fetchMessages({limit: messagecount + 1}).then(messages => message.channel.bulkDelete(messages));
+	}
 	if (command == "sb"){
 		if (args.length == 0){
 			message.channel.send("Include a message, faggot.")
 			.then(sentMessage => sentMessage.delete(3000));
 		}
 		else {
-			var str = args.join(' ');
-			var res = '';
-			for (var i = 0; i < str.length; i++){
+			const str = args.join(" ");
+			let res = "";
+			for (let i = 0; i < str.length; i++){
 				if (i % 2 == 0){
 					res += str.charAt(i).toLowerCase();
 				}
@@ -73,8 +58,8 @@ client.on("message", message => {
 			.then(sentMessage => sentMessage.delete(3000));
 		}
 		else{
-			var str = args.join(' ');
-			var res = '';
+			const str = args.join(" ");
+			let res = "";
 			for (var i = 0; i < str.length; i++){
 				res += str.charAt(i) + " ";
 			}
@@ -83,7 +68,7 @@ client.on("message", message => {
 	}
 	});
 	
-client.on('voiceStateUpdate', (oldMember, newMember) => {
+client.on("voiceStateUpdate", (oldMember, newMember) => {
   let newUserChannel = newMember.voiceChannel
   let oldUserChannel = oldMember.voiceChannel
 

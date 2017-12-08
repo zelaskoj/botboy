@@ -1,6 +1,6 @@
 {
   "name": "bot-boy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Bot representative of the DDD",
   "main": "bot.js",
   "author": "Jacob Zelasko",
