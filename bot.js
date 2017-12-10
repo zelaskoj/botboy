@@ -83,6 +83,16 @@ client.on("message", message => {
 			message.channel.send(res);
 		}
 	}
+	if (command == "ayylmao"){
+		let voiceChannel= client.channels.get('219550009928974336');
+		voiceChannel.join().then(connection =>
+		{
+			const dispatcher = connection.playFile("./assets/ayylmao.wav");
+			dispatcher.on("end", end => {
+				voiceChannel.leave();
+			});
+		}).catch(err => console.log(err))
+	}
 	});
 	
 client.on("voiceStateUpdate", (oldMember, newMember) => {
