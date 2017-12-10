@@ -86,19 +86,28 @@ client.on("message", message => {
 	});
 	
 client.on("voiceStateUpdate", (oldMember, newMember) => {
-  let newUserChannel = newMember.voiceChannel
-  let oldUserChannel = oldMember.voiceChannel
+  	let newUserChannel = newMember.voiceChannel
+  	let oldUserChannel = oldMember.voiceChannel
 
-  if(oldUserChannel === undefined && newUserChannel !== undefined) {
-	  client.guilds.first().channels.first().send("hey, its " + 
-	  newMember.nickname.toLowerCase() + "! what's brackin bruh, how you livin")
-	  .then(sentMessage => sentMessage.delete(10000));
+  	if(oldUserChannel === undefined && newUserChannel !== undefined) {
+  		if(newMember.id == 160463230001610753){
+  			newUserChannel.join().then(connection =>
+  			{
+  				const dispatcher = connection.playFile("./assets/cody.wav");
+  				dispatcher.on("end", end => {
+  					newUserChannel.leave();
+  				});
+  			}).catch(err => console.log(err));
+  		}
+		client.guilds.first().channels.first().send("hey, its " + 
+	  	newMember.nickname + "! what's brackin bruh, how you livin")
+	  	.then(sentMessage => sentMessage.delete(10000));
 
-  } else if(newUserChannel === undefined){
+  	} else if(newUserChannel === undefined){
 
     // User leaves a voice channel
 
-  }
+  	}
 })
 
 	client.login(config.token);
