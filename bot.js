@@ -46,7 +46,7 @@ client.on("message", message => {
 	if (command == "help"){
 		message.author.send(config.help);
 	}
-	if(command === "purge") {
+	if(command == "purge") {
 		const messagecount = parseInt(args[0], 10);
 		message.channel.fetchMessages({limit: messagecount + 1}).then(messages => message.channel.bulkDelete(messages));
 	}
@@ -93,7 +93,17 @@ client.on("message", message => {
 			});
 		}).catch(err => console.log(err))
 	}
-	});
+	if (command == "doinks"){
+		let voiceChannel= client.channels.get('219550009928974336');
+		voiceChannel.join().then(connection =>
+		{
+			const dispatcher = connection.playFile("./assets/doinks.wav");
+			dispatcher.on("end", end => {
+				voiceChannel.leave();
+			});
+		}).catch(err => console.log(err))
+	}
+});
 	
 client.on("voiceStateUpdate", (oldMember, newMember) => {
   	let newUserChannel = newMember.voiceChannel
@@ -120,6 +130,6 @@ client.on("voiceStateUpdate", (oldMember, newMember) => {
     // User leaves a voice channel
 
   	}
-})
+});
 
 	client.login(config.token);
