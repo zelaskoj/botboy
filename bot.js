@@ -103,6 +103,16 @@ client.on("message", message => {
 			});
 		}).catch(err => console.log(err))
 	}
+	if (command == "dingading"){
+		let voiceChannel= client.channels.get('219550009928974336');
+		voiceChannel.join().then(connection =>
+		{
+			const dispatcher = connection.playFile("./assets/dingading.wav");
+			dispatcher.on("end", end => {
+				voiceChannel.leave();
+			});
+		}).catch(err => console.log(err))
+	}
 });
 	
 client.on("voiceStateUpdate", (oldMember, newMember) => {
@@ -110,7 +120,7 @@ client.on("voiceStateUpdate", (oldMember, newMember) => {
   	let oldUserChannel = oldMember.voiceChannel
 
   	if(oldUserChannel === undefined && newUserChannel !== undefined) {
-  		if(newMember.id == 90165848467070976){
+  		if(newMember.id == 160463230001610753){
   			newUserChannel.join().then(connection =>
   			{
   				const dispatcher = connection.playFile("./assets/cody.wav");
@@ -119,9 +129,16 @@ client.on("voiceStateUpdate", (oldMember, newMember) => {
   				});
   			}).catch(err => console.log(err));
   		}
-  		if (!newMember.id == 257983171331751946){
+  		if (newMember.id != 257983171331751946){
+			let usedName = "";
+			if (!newMember.nickname){
+				usedName = newMember.user.username;
+			}
+			else {
+				usedName = newMember.nickname;
+			}
   			client.guilds.first().channels.first().send("hey, its " + 
-	  		newMember.nickname + "! what's brackin bruh, how you livin")
+	  		usedName + "! what's brackin bruh, how you livin")
 	  		.then(sentMessage => sentMessage.delete(10000));
   		}
 
