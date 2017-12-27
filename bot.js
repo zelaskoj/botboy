@@ -5,6 +5,8 @@ const config = require("./config.json");
 const client = new Discord.Client();
 const spongebob = new Discord.Attachment("./assets/spongebob.jpg");
 var memes = "";
+var help = "";
+var cliplist = "";
 
 
 client.on("ready", () => {
@@ -18,13 +20,24 @@ client.on("ready", () => {
 			}
 		}
 	});
+	fs.readFile("./help.txt", "utf-8", (err,data)  => {
+		if (err) throw err;
+		help = data;
+		cliplist = help.split("\n");
+		cliplist = cliplist.slice(cliplist.indexOf("Audio clips (!pf <clipname>):\r") + 1);
+		for(let i = 0; i < cliplist.length; i++){
+			if (cliplist[i].endsWith("\r")){
+				cliplist[i] = cliplist[i].slice(0, -1);
+			}
+		}
+	});
 });
 
 client.on("message", message => {
 	
-	if(message.author.bot) return;
+	if(message.author.bot) return; //if message is from the bot itself, ignore
   
-	if(message.content.indexOf(config.prefix) !== 0) return;
+	if(message.content.indexOf(config.prefix) !== 0) return; //if message doesn't start with prefix, ignore
 
 	const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
@@ -44,7 +57,7 @@ client.on("message", message => {
 		message.channel.send("suh dude");
 	}
 	if (command == "help"){
-		message.author.send(config.help);
+		message.author.send(help);
 	}
 	if(command == "purge") {
 		const messagecount = parseInt(args[0], 10);
@@ -83,36 +96,54 @@ client.on("message", message => {
 			message.channel.send(res);
 		}
 	}
-	if (command == "ayylmao"){
-		let voiceChannel= client.channels.get('219550009928974336');
-		voiceChannel.join().then(connection =>
-		{
-			const dispatcher = connection.playFile("./assets/ayylmao.wav");
-			dispatcher.on("end", end => {
-				voiceChannel.leave();
-			});
-		}).catch(err => console.log(err))
+	if (command == "pf"){
+		if (args.length == 0){
+			message.channel.send("Include a message, faggot.")
+			.then(sentMessage => sentMessage.delete(3000));
+		}
+		else {
+			const str = args.join("");
+			if (cliplist.includes(str)){
+				let voiceChannel= client.channels.get('219550009928974336');
+				voiceChannel.join().then(connection =>
+				{
+					const dispatcher = connection.playFile("./assets/" + str + ".wav");
+					dispatcher.on("end", end => {
+						voiceChannel.leave();
+					});
+				}).catch(err => console.log(err))
+			}
+			else {
+				message.channel.send("No such file, faggot.")
+				.then(sentMessage => sentMessage.delete(3000));
+			}
+			
+		}
 	}
-	if (command == "doinks"){
-		let voiceChannel= client.channels.get('219550009928974336');
-		voiceChannel.join().then(connection =>
-		{
-			const dispatcher = connection.playFile("./assets/doinks.wav");
-			dispatcher.on("end", end => {
-				voiceChannel.leave();
-			});
-		}).catch(err => console.log(err))
+	if (command == "update"){
+		fs.readFile("./assets/memes.txt", "utf-8", (err, data) => {
+			if (err) throw err;
+			memes = data.split("\n");
+			for(let i = 0; i < memes.length; i++){
+				if (memes[i].endsWith("\r")){
+					memes[i] = memes[i].slice(0, -1);
+				}
+			}
+		});
+		fs.readFile("./help.txt", "utf-8", (err,data)  => {
+			if (err) throw err;
+			help = data;
+			cliplist = help.split("\n");
+			cliplist = cliplist.slice(cliplist.indexOf("Audio clips (!pf <clipname>):\r") + 1);
+			for(let i = 0; i < cliplist.length; i++){
+				if (cliplist[i].endsWith("\r")){
+					cliplist[i] = cliplist[i].slice(0, -1);
+				}
+			}
+		});
+		console.log("Files updated!");
 	}
-	if (command == "dingading"){
-		let voiceChannel= client.channels.get('219550009928974336');
-		voiceChannel.join().then(connection =>
-		{
-			const dispatcher = connection.playFile("./assets/dingading.wav");
-			dispatcher.on("end", end => {
-				voiceChannel.leave();
-			});
-		}).catch(err => console.log(err))
-	}
+	message.delete(1000);
 });
 	
 client.on("voiceStateUpdate", (oldMember, newMember) => {
