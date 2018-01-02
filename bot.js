@@ -7,6 +7,7 @@ const spongebob = new Discord.Attachment("./assets/spongebob.jpg");
 var memes = "";
 var help = "";
 var cliplist = "";
+var voiceChannel; 
 
 
 client.on("ready", () => {
@@ -43,8 +44,24 @@ client.on("message", message => {
 	const command = args.shift().toLowerCase();
 
 	if (command == "dc"){
-		message.delete();
-		client.destroy();
+		if(message.author.id == 90165848467070976){
+			if(voiceChannel){
+				if(voiceChannel.connection){
+					voiceChannel.leave();
+				}
+			}
+			message.delete();
+			setTimeout(function() {
+				client.destroy();
+				process.exit();
+			}, 1000);
+			
+		}
+		else{
+			message.channel.send("You don't have permission to use this command!")
+			.then(sentMessage => sentMessage.delete(3000));
+		}
+		
 	}
 	if (command == "meme"){
 		let random = Math.floor(Math.random() * memes.length);
@@ -96,52 +113,69 @@ client.on("message", message => {
 			message.channel.send(res);
 		}
 	}
-	if (command == "pf"){
-		if (args.length == 0){
-			message.channel.send("Include a message, faggot.")
-			.then(sentMessage => sentMessage.delete(3000));
-		}
-		else {
-			const str = args.join("");
-			if (cliplist.includes(str)){
-				let voiceChannel= client.channels.get('219550009928974336');
-				voiceChannel.join().then(connection =>
-				{
-					const dispatcher = connection.playFile("./assets/" + str + ".wav");
-					dispatcher.on("end", end => {
-						voiceChannel.leave();
-					});
-				}).catch(err => console.log(err))
-			}
-			else {
-				message.channel.send("No such file, faggot.")
-				.then(sentMessage => sentMessage.delete(3000));
-			}
-			
+	if (command == "enter"){
+		if(!voiceChannel){
+			voiceChannel = client.channels.get('219550009928974336');
+			voiceChannel.join();
 		}
 	}
+	if (command == "exit" || command == "fuckoff"){
+		if(voiceChannel){
+			voiceChannel.leave();
+			voiceChannel = null;
+		}
+	}
+	if (command == "pf"){
+		if (voiceChannel){
+			if (args.length == 0){
+				message.channel.send("Include a filename!")
+				.then(sentMessage => sentMessage.delete(3000));
+			}
+			else {
+				const str = args.join("");
+				if (cliplist.includes(str)){
+					voiceChannel.connection.playFile("./assets/" + str + ".wav");
+				}
+				else {
+					message.channel.send("No such file!")
+					.then(sentMessage => sentMessage.delete(3000));
+				}
+			}
+		}
+		else{
+			message.channel.send("Bot isn't connected!")
+			.then(sentMessage => sentMessage.delete(3000));
+		}
+		
+	}
 	if (command == "update"){
-		fs.readFile("./assets/memes.txt", "utf-8", (err, data) => {
-			if (err) throw err;
-			memes = data.split("\n");
-			for(let i = 0; i < memes.length; i++){
-				if (memes[i].endsWith("\r")){
-					memes[i] = memes[i].slice(0, -1);
+		if(message.author.id == 90165848467070976){
+			fs.readFile("./assets/memes.txt", "utf-8", (err, data) => {
+				if (err) throw err;
+				memes = data.split("\n");
+				for(let i = 0; i < memes.length; i++){
+					if (memes[i].endsWith("\r")){
+						memes[i] = memes[i].slice(0, -1);
+					}
 				}
-			}
-		});
-		fs.readFile("./help.txt", "utf-8", (err,data)  => {
-			if (err) throw err;
-			help = data;
-			cliplist = help.split("\n");
-			cliplist = cliplist.slice(cliplist.indexOf("Audio clips (!pf <clipname>):\r") + 1);
-			for(let i = 0; i < cliplist.length; i++){
-				if (cliplist[i].endsWith("\r")){
-					cliplist[i] = cliplist[i].slice(0, -1);
+			});
+			fs.readFile("./help.txt", "utf-8", (err,data)  => {
+				if (err) throw err;
+				help = data;
+				cliplist = help.split("\n");
+				cliplist = cliplist.slice(cliplist.indexOf("Audio clips (!pf <clipname>):\r") + 1, cliplist.indexOf("NOTE:\r") - 1);
+				for(let i = 0; i < cliplist.length; i++){
+					if (cliplist[i].endsWith("\r")){
+						cliplist[i] = cliplist[i].slice(0, -1);
+					}
 				}
-			}
-		});
+			});
 		console.log("Files updated!");
+		}
+		else{
+			message.channel.send("You don't have permission to use this command!")
+			.then(sentMessage => sentMessage.delete(3000));
+		}
 	}
 	message.delete(1000);
 });
