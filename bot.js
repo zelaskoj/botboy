@@ -82,7 +82,7 @@ client.on("message", message => {
 	}
 	if (command == "sb"){
 		if (args.length == 0){
-			message.channel.send("Include a message, faggot.")
+			message.channel.send("Include a message.")
 			.then(sentMessage => sentMessage.delete(3000));
 		}
 		else {
@@ -101,7 +101,7 @@ client.on("message", message => {
 	}
 	if (command == "ae"){
 		if (args.length == 0){
-			message.channel.send("Include a message, faggot.")
+			message.channel.send("Include a message.")
 			.then(sentMessage => sentMessage.delete(3000));
 		}
 		else{
@@ -113,7 +113,7 @@ client.on("message", message => {
 			message.channel.send(res);
 		}
 	}
-	if (command == "enter"){
+	if (command == "enter" || command == "fuckme"){
 		if(!voiceChannel){
 			voiceChannel = client.channels.get('219550009928974336');
 			voiceChannel.join();
@@ -143,10 +143,9 @@ client.on("message", message => {
 			}
 		}
 		else{
-			message.channel.send("Bot isn't connected!")
+			message.channel.send("No voice connection!")
 			.then(sentMessage => sentMessage.delete(3000));
 		}
-		
 	}
 	if (command == "update"){
 		if(message.author.id == 90165848467070976){
@@ -186,13 +185,19 @@ client.on("voiceStateUpdate", (oldMember, newMember) => {
 
   	if(oldUserChannel === undefined && newUserChannel !== undefined) {
   		if(newMember.id == 160463230001610753){
-  			newUserChannel.join().then(connection =>
-  			{
-  				const dispatcher = connection.playFile("./assets/cody.wav");
-  				dispatcher.on("end", end => {
-  					newUserChannel.leave();
-  				});
-  			}).catch(err => console.log(err));
+			if(voiceChannel){
+				voiceChannel.connection.playFile("./assets/cody.wav");
+			}
+			else{
+				newUserChannel.join().then(connection =>
+				{
+					const dispatcher = connection.playFile("./assets/cody.wav");
+					dispatcher.on("end", end => {
+						newUserChannel.leave();
+					});
+				}).catch(err => console.log(err));
+			}
+ 
   		}
   		if (newMember.id != 257983171331751946){
 			let usedName = "";
