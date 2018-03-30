@@ -44,7 +44,8 @@ client.on("message", message => {
 	const command = args.shift().toLowerCase();
 
 	if (command == "dc"){
-		if(message.author.id == 90165848467070976){
+		if(message.author.id == config.ids.JZ){
+			client.
 			if(voiceChannel){
 				if(voiceChannel.connection){
 					voiceChannel.leave();
@@ -115,7 +116,7 @@ client.on("message", message => {
 	}
 	if (command == "enter" || command == "fuckme"){
 		if(!voiceChannel){
-			voiceChannel = client.channels.get('219550009928974336');
+			voiceChannel = client.channels.get(config.voiceChannel);
 			voiceChannel.join();
 		}
 	}
@@ -148,7 +149,7 @@ client.on("message", message => {
 		}
 	}
 	if (command == "update"){
-		if(message.author.id == 90165848467070976){
+		if(message.author.id == config.ids.JZ){
 			fs.readFile("./assets/memes.txt", "utf-8", (err, data) => {
 				if (err) throw err;
 				memes = data.split("\n");
@@ -184,7 +185,7 @@ client.on("voiceStateUpdate", (oldMember, newMember) => {
   	let oldUserChannel = oldMember.voiceChannel
 
   	if(oldUserChannel === undefined && newUserChannel !== undefined) {
-  		if(newMember.id == 160463230001610753){
+  		if(newMember.id == config.ids.Cody){
 			if(voiceChannel){
 				voiceChannel.connection.playFile("./assets/cody.wav");
 			}
@@ -199,7 +200,7 @@ client.on("voiceStateUpdate", (oldMember, newMember) => {
 			}
  
   		}
-  		if (newMember.id != 257983171331751946){
+  		if (newMember.id != config.ids.Bot){
 			let usedName = "";
 			if (!newMember.nickname){
 				usedName = newMember.user.username;

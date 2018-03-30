@@ -1,4 +1,13 @@
 {
    "token" : "MjU3OTgzMTcxMzMxNzUxOTQ2.DQe-0g.9uopBpKk4qBBBX4z1XwA0IyRxTY",
-   "prefix" : "!"
+   "prefix" : "!",
+   "ids" : {
+		"JZ" : "90165848467070976",
+		"Chris" : "120734944757547008",
+		"Cody" : "160463230001610753",
+		"Mason" : "153325248643596288",
+		"Jon" : "83722556581871616",
+		"Bot" : "257983171331751946"
+	},
+	"voiceChannel" : "219550009928974336" 
 }
